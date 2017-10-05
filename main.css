@@ -1,0 +1,78 @@
+* {
+	font-family: sans-serif;
+	font-size: 15pt;
+}
+
+#error {
+	color: red;
+}
+
+container {
+	display: inline-block;
+	border: 1px solid black;
+	width: 790px;
+	height: 618px;
+	background-image: url(map.svg);
+}
+
+table, th, td, tr {
+	border: 1px solid #333;
+	border-collapse: collapse;
+}
+
+td {
+	padding: 4px 10px;
+}
+
+.line {
+	min-width: 40px;
+}
+
+.time {
+	text-align: right;
+	width: 55px;
+}
+
+.cardinal {
+	float: left;
+	display: inline-block;
+	width: 10px;
+	font-size: 12pt;
+	font-weight: normal;
+	margin: 3px 3px;
+}
+
+.stopid {
+	display: inline-block;
+	font-weight: normal;
+	font-size: 14pt;
+}
+
+table {
+	position: absolute;
+	background-color: rgba(255, 255, 255, 0.8);
+	box-shadow: 0px 0px 5px gray;
+	min-width: 280px;
+	margin: 5px;
+}
+tr:nth-child(even) {
+	background: #EEEEEE;
+	background-color: rgba(222, 222, 222, 0.8);
+}
+
+table#west {
+	left: 65px;
+	top: 64px;
+}
+table#north {
+	left: 445px;
+	top: 64px;
+}
+table#south {
+	left: 65px;
+	top: 374px;
+}
+table#east {
+	left: 445px;
+	top: 374px;
+}
