@@ -1,59 +1,70 @@
 <?php
-$url = "https://api.digitransit.fi/routing/v1/routers/hsl/index/graphql";    
-$request = file_get_contents('./stops.txt');
+$SOAP = new SoapClient("http://omatlahdot.hkl.fi/interfaces/kamo?wsdl");
 
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_HEADER, false);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($curl, CURLOPT_HTTPHEADER,
-        array("Content-type: application/graphql"));
-curl_setopt($curl, CURLOPT_POST, true);
-curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
+$Stop0 = $SOAP->getNextDeparturesRT("1284122"); //Etelään
+$Stop1 = $SOAP->getNextDeparturesRT("1284157"); //Pohjoiseen
+$Stop2 = $SOAP->getNextDeparturesRT("1284123"); //Länteen
+$Stop3 = $SOAP->getNextDeparturesRT("1284172"); //Itään
 
-$json_response = curl_exec($curl);
-
-$status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-
-if ( $status != 200 ) {
-    die("Error: call to URL $url failed with status $status, response $json_response, curl_error " . curl_error($curl) . ", curl_errno " . curl_errno($curl));
-}
-
-
-curl_close($curl);
-
-$response = json_decode($json_response, true);
-
-$stopDetails = array(
-	'divId' => array( 
-		'south',
-		'west',
-		'north',
-		'east' 
-		),
-	'divDir' => array(
-		'&#8595;E',
-		'&#8592;L',
-		'&#8593;P',
-		'I&#8594;'
-		)
-);
-
-for ($i = 0; $i <= 3; $i++) {
-	echo '
-	<table id="' . $stopDetails[divId][$i] . '">
+echo '
+	<table id="west">
 		<tr>
-			<th colspan="3"><div class="cardinal">' . $stopDetails[divDir][$i] . '</div>' . $response[data][stops][$i][name] . ' <div class="stopid">(3122)</div></th>
+			<th colspan="3"><div class="cardinal">&#8592;L</div>' . $Stop0[0]->stopname . ' <div class="stopid">(3153)</div></th>
 		</tr>';
-	for ($j = 0; $j <= 4; $j++) {
+	for ($i = 0; $i <= 4; $i++) {
     	echo 
 			'<tr class="lines">
-				<td class="line">' . $response[data][stops][$i][stoptimesWithoutPatterns][$j][trip][pattern][route][shortName] . '</td>
-				<td class="dest">' . $response[data][stops][$i][stoptimesWithoutPatterns][$j][trip][pattern][headsign] . '</td>
-				<td class="time">'; 
-				if (empty($response[data][stops][$i][stoptimesWithoutPatterns][$j][realtime])) {echo '~'; }; echo gmdate("H:i", $response[data][stops][$i][stoptimesWithoutPatterns][$j][realtimeArrival]) . '</td>
+				<td class="line">' . $Stop0[$i]->line . '</td>
+				<td class="dest">' . $Stop0[$i]->dest . '</td>
+				<td class="time">'; if (empty($Stop0[$i]->rtime)) {echo '~' . substr($Stop0[$i]->time, 0, -3); ;} else {echo substr($Stop0[$i]->rtime, 0, -3); ;}; echo '</td>
 			</tr>';
 		};
-	echo '</table>';
-}
-?>
+echo '</table>';
 
+echo '
+	<table id="north">
+		<tr>
+			<th colspan="3"><div class="cardinal">&#8593;P</div>' . $Stop1[0]->stopname . ' <div class="stopid">(3123)</div></th>
+		</tr>';
+	for ($i = 0; $i <= 4; $i++) {
+    	echo 
+			'<tr class="lines">
+				<td class="line">' . $Stop1[$i]->line . '</td>
+				<td class="dest">' . $Stop1[$i]->dest . '</td>
+				<td class="time">'; if (empty($Stop1[$i]->rtime)) {echo '~' . substr($Stop1[$i]->time, 0, -3); ;} else {echo substr($Stop1[$i]->rtime, 0, -3); ;}; echo '</td>
+
+			</tr>';
+		};
+echo '</table>';
+
+echo '
+	<table id="south">
+		<tr>
+			<th colspan="3"><div class="cardinal">&#8595;E</div>' . $Stop2[0]->stopname . ' <div class="stopid">(3122)</div></th>
+		</tr>';
+	for ($i = 0; $i <= 4; $i++) {
+    	echo 
+			'<tr class="lines">
+				<td class="line">' . $Stop2[$i]->line . '</td>
+				<td class="dest">' . $Stop2[$i]->dest . '</td>
+				<td class="time">'; if (empty($Stop2[$i]->rtime)) {echo '~' . substr($Stop2[$i]->time, 0, -3); ;} else {echo substr($Stop2[$i]->rtime, 0, -3); ;}; echo '</td>
+
+			</tr>';
+		};
+echo '</table>';
+
+echo '<table id="east">
+		<tr>
+			<th colspan="3"><div class="cardinal">I&#8594;</div>' . $Stop3[0]->stopname . ' <div class="stopid">(3154)</div></th>
+		</tr>';
+	for ($i = 0; $i <= 4; $i++) {
+    	echo 
+			'<tr class="lines">
+				<td class="line">' . $Stop3[$i]->line . '</td>
+				<td class="dest">' . $Stop3[$i]->dest . '</td>
+				<td class="time">'; if (empty($Stop3[$i]->rtime)) {echo '~' . substr($Stop3[$i]->time, 0, -3); ;} else {echo substr($Stop3[$i]->rtime, 0, -3); ;}; echo '</td>
+
+			</tr>';
+		};
+echo '</table>';
+?>
