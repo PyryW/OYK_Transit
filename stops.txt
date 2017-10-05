@@ -1,0 +1,19 @@
+{
+  stops(name: "Patola") {
+    name
+    gtfsId
+    stoptimesWithoutPatterns {
+      realtimeArrival
+      realtime
+      trip {
+        pattern {
+          headsign
+          route {
+            shortName
+          }
+        }
+      }
+    }
+  }
+}
+
